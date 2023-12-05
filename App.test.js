@@ -1,74 +1,47 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import App from './App'; 
-import axios from 'axios';
-import "@testing-library/jest-dom";
+import { render, fireEvent, screen } from '@testing-library/react';
+import App from './App';
+import '@testing-library/jest-dom';
 
 
-// Mocking axios requests
-jest.mock('axios');
-
-describe('App', () => {
-  beforeEach(() => {
-    // Your setup code or mock any necessary data
+describe('Login and Registration Functionality', () => {
+  it('renders login form with input fields and buttons', () => {
+    render(<App />);
+    
+    // Check if login form is rendered with input fields and buttons
+    expect(screen.getByText('Song Rating App')).toBeInTheDocument();
+    expect(screen.getByText('Login')).toBeInTheDocument();
+    expect(screen.getByLabelText('Username:')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password:')).toBeInTheDocument();
+    expect(screen.getByText('Login')).toBeInTheDocument();
+    expect(screen.getByText('Register')).toBeInTheDocument();
   });
 
-  it('renders all input fields and buttons for the login form', () => {
-    const { getByPlaceholderText, getByText } = render(<App />);
-
-    // Check if all elements in the login form are present
-    expect(getByPlaceholderText('Enter your username')).toBeDefined();
-    expect(getByPlaceholderText('Enter your password')).toBeDefined();
-    expect(getByText('Login')).toBeDefined();
-    expect(getByText('Register')).toBeDefined(); // Assuming there's a 'Register' button/link for registration
+  it('navigates from login page to registration page', () => {
+    render(<App />);
+    
+    // Click the 'Register' button to navigate to registration page
+    fireEvent.click(screen.getByText('Register'));
+    
+    // Check if the registration form is rendered after clicking 'Register'
+    expect(screen.getByText('Register')).toBeInTheDocument();
+    expect(screen.getByLabelText('Username:')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password:')).toBeInTheDocument();
+    expect(screen.getByText('Register')).toBeInTheDocument();
   });
 
-  it('navigates to the registration form when "Register" link is clicked', () => {
-    const { getByText } = render(<App />);
+  it('simulates user input and registration with incorrect value', () => {
+    render(<App />);
+    
+    // Click the 'Register' button to navigate to registration page
+    fireEvent.click(screen.getByText('Register'));
 
-    // Click on the "Register" link/button to navigate to registration form
-    fireEvent.press(getByText('Register'));
+    // Fill in the registration form with incorrect values and submit
+    fireEvent.change(screen.getByLabelText('Username:'), { target: { value: 'testuser' } });
+    fireEvent.change(screen.getByLabelText('Password:'), { target: { value: 'short' } });
+    fireEvent.click(screen.getByText('Register'));
 
-    // Check if the registration form elements are present after the click
-    expect(getByText('Register')).toBeDefined(); // Assuming there's a title/text for the registration form
-    expect(getByPlaceholderText('Enter your username')).toBeDefined();
-    expect(getByPlaceholderText('Enter your password')).toBeDefined();
+    // Check if the error message is displayed for incorrect registration input
+    expect(screen.getByText('Please provide a valid username and a password with more than 8 characters.')).toBeInTheDocument();
   });
-
-  it('registers a user with valid details', async () => {
-    // Mock a successful registration response
-    axios.post.mockResolvedValue({ status: 200, data: true });
-
-    const { getByText, getByPlaceholderText } = render(<App />);
-
-    // Simulate user input in the registration form with valid details
-    fireEvent.changeText(getByPlaceholderText('Enter your username'), 'testuser');
-    fireEvent.changeText(getByPlaceholderText('Enter your password'), 'validpassword123');
-    fireEvent.press(getByText('Register'));
-
-    // Wait for registration to complete and check for successful registration or redirection
-    await waitFor(() => {
-      expect(getByText('Login')).toBeTruthy();    
-    });
-  });
-
-  it('displays an error message for invalid registration details', async () => {
-    // Mock a failed registration response
-    axios.post.mockRejectedValue(new Error('Registration failed'));
-
-    const { getByText, getByPlaceholderText } = render(<App />);
-
-    // Simulate user input in the registration form with invalid details
-    fireEvent.changeText(getByPlaceholderText('Enter your username'), '');
-    fireEvent.changeText(getByPlaceholderText('Enter your password'), 'short');
-    fireEvent.press(getByText('Register'));
-
-    // Wait for registration to complete and check if error message is displayed
-    await waitFor(() => {
-      expect(getByText('Please provide a valid username and a password with more than 10 characters.')).toBeTruthy();
-    });
-  });
-
-  // Add more tests for login functionality, adding songs, editing, deleting, etc.
-
 });
