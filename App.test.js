@@ -3,8 +3,8 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import axios from 'axios';
 import App from './App';
-
-jest.mock('axios');
+// Some of the Jest code is completed with the help of GPT and tutorial https://www.browserstack.com/guide/unit-testing-of-react-apps-using-jest
+jest.mock('axios'); // mock axios
 
 describe('User Login and Registration', () => {
   beforeEach(() => {
@@ -13,28 +13,27 @@ describe('User Login and Registration', () => {
     axios.post.mockResolvedValue({ status: 200, data: true });
   });
 
-  test('renders login form and interacts with it', async () => {
+  test('rendering test for login', async () => {
     render(<App />);
     // check if the login form is rendered
     expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument(); 
     expect(screen.getByLabelText('Username:')).toBeInTheDocument();
     expect(screen.getByLabelText('Password:')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument();
-  
-    // Simulate user input
+    // Simulate user input(typing)
     fireEvent.change(screen.getByLabelText('Username:'), { target: { value: 'username' } });
     fireEvent.change(screen.getByLabelText('Password:'), { target: { value: 'password' } });
   
-    // Simulate form submission
+    // check the form submission by clicking button
     fireEvent.click(screen.getByRole('button', { name: 'Login' }));
 
-    // Expect the login function to be called
+    // Expect the login function to be called, so wait
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalledWith(expect.anything(), { username: 'username', password: 'password' });
     });
   });
 
-  test('renders registration form when register button is clicked', async () => {
+  test('rendering test for registration', async () => {
     render(<App />);
   // Click the Register button to switch to the registration form
   fireEvent.click(screen.getByRole('button', { name: 'Register' }));
@@ -60,7 +59,7 @@ describe('User Login and Registration', () => {
 
   test('navigates from login to registration page', () => {
     render(<App />);
-    // Assume clicking 'Register' navigates to the registration form
+    // Assert clicking 'Register' will navigates to registration
     fireEvent.click(screen.getByRole('button', { name: 'Register' }));
     expect(screen.getByRole('heading', { name: 'Register' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Register' })).toBeInTheDocument();
@@ -75,7 +74,7 @@ describe('User Login and Registration', () => {
     expect(screen.getByLabelText('Password:').value).toBe('password123');
   });
 
-  test('detects an incorrect username input value', async () => {
+  test('detects a wrong username for login', async () => {
     axios.post.mockResolvedValueOnce({ status: 200, data: false }); // Mock a failed login
     render(<App />);
     fireEvent.change(screen.getByLabelText('Username:'), { target: { value: 'wrong' } });
@@ -88,7 +87,7 @@ describe('User Login and Registration', () => {
     });
   });
 
-  test('detects password too short during registration', async () => {
+  test('detect an incorrect value for registration', async () => {
     axios.post.mockResolvedValueOnce({ status: 200, data: false }); // Assert registration failed
     render(<App />);
     
