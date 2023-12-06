@@ -1,38 +1,38 @@
 <?php
 
 
-class UserApiTest extends PHPUnit\Framework\TestCase
+class StackTest extends PHPUnit\Framework\TestCase
 {
     protected $client;
 
     protected function setUp(): void
     {
-        $this->client = new GuzzleHttp\Client(['base_uri' => 'http://localhost:3306/index.php']);
+        $this->client = new GuzzleHttp\Client(['base_uri' => 'http://localhost:80/index.php']);// the port is 80
     }
 
     public function testGet_UserList()
     {
         $response = $this->client->request('GET', 'index.php/user/list');
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode()); //responds with a 200 response code
     }
 
     public function testPost_CreateUser()
     {
         $response = $this->client->request('POST', 'index.php/user/create', [
             'json' => [
-                'username' => 'newuser',
-                'password' => 'newpass'
+                'username' => 'newusername',
+                'password' => 'newpassword123'
             ]
         ]);
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode()); //responds with a 201 response code.
     }
 
     public function testPost_LoginUser()
     {
         $response = $this->client->request('POST', 'index.php/user/check', [
             'json' => [
-                'username' => 'existinguser',
-                'password' => 'correctpass'
+                'username' => '123',
+                'password' => '1234567890'
             ]
         ]);
         $this->assertEquals(201, $response->getStatusCode());
@@ -53,7 +53,7 @@ class UserApiTest extends PHPUnit\Framework\TestCase
     {
         $response = $this->client->request('POST', 'index.php/user/add', [
             'json' => [
-                'username' => 'user',
+                'username' => '123',
                 'artist' => 'newartist',
                 'song' => 'newsong',
                 'rating' => 5
