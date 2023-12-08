@@ -1,11 +1,11 @@
 
-def test_string(test_num, expected, actual):
+def test_string(test_num, expected, actual):#directly compare two strings here
     if expected == actual:
         print(f"Test {test_num} passed! `{actual}` matches `{expected}`.")
     else:
         print(f"Test {test_num} failed. Expected: `{expected}`. Got: `{actual}`.")
 
-def test_strlist(test_num, expected_list, actual_list):
+def test_strlist(test_num, expected_list, actual_list): #use for loop to compare every element in the strlist
     for i in range(len(expected_list)):
         expected = expected_list[i]
         actual = actual_list[i]
@@ -14,13 +14,13 @@ def test_strlist(test_num, expected_list, actual_list):
         else:
             print(f"Part {i} in test {test_num} failed. Expected: `{expected}`. Got: `{actual}`.")
 
-def test_int(test_num, expected, actual):
+def test_int(test_num, expected, actual):#directly compare two int
     if expected == actual:
         print(f"Test {test_num} passed! `{actual}` matches `{expected}`.")
     else:
         print(f"Test {test_num} failed. Expected: `{expected}`. Got: `{actual}`.")
 
-def test_intlist(test_num, expected_list, actual_list):
+def test_intlist(test_num, expected_list, actual_list):#use for loop two compare two intlists
     all_passed = True
     for i in range(len(expected_list)):
         expected = expected_list[i]

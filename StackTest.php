@@ -1,6 +1,6 @@
 <?php
 
-
+// the test function structure here is completed with the help of the GPT and tutorial
 class StackTest extends PHPUnit\Framework\TestCase
 {
     protected $client;
@@ -29,7 +29,7 @@ class StackTest extends PHPUnit\Framework\TestCase
 
     public function testPost_LoginUser()
     {
-        $response = $this->client->request('POST', 'index.php/user/check', [
+        $response = $this->client->request('POST', 'index.php/user/check', [//The username and password here is what we hardcode
             'json' => [
                 'username' => '123',
                 'password' => '1234567890'
@@ -42,7 +42,7 @@ class StackTest extends PHPUnit\Framework\TestCase
     {
         $response = $this->client->request('POST', 'index.php/user/check', [
             'json' => [
-                'username' => 'wronguser',
+                'username' => 'wrong',
                 'password' => 'wrongpass'
             ]
         ]);
@@ -59,12 +59,12 @@ class StackTest extends PHPUnit\Framework\TestCase
                 'rating' => 5
             ]
         ]);
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());//responds with 201 code
     }
 
     public function testPost_UpdateSong()
     {
-        $response = $this->client->request('POST', 'index.php/user/update', [
+        $response = $this->client->request('POST', 'index.php/user/update', [// we hardcode the id here
             'json' => [
                 'id' => 1,
                 'artist' => 'updatedartist',
@@ -72,17 +72,17 @@ class StackTest extends PHPUnit\Framework\TestCase
                 'rating' => 4
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());//responds with 200 code
     }
 
     public function testPost_DeleteSong()
     {
-        $response = $this->client->request('POST', 'index.php/user/delete', [
+        $response = $this->client->request('POST', 'index.php/user/delete', [//we hardcode the id to delete here
             'json' => [
                 'id' => 1
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());//responds with 200 code
     }
 }
 ?>
